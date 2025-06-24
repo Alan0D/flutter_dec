@@ -4,68 +4,76 @@ import '../models/message.dart';
 class MessageBubble extends StatelessWidget {
   final Message message;
 
-  const MessageBubble({Key? key, required this.message}) : super(key: key);
+  const MessageBubble({
+    Key? key,
+    required this.message,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final isUserMessage = message.type == MessageType.user;
-    
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
       child: Row(
-        mainAxisAlignment: isUserMessage 
-            ? MainAxisAlignment.end 
-            : MainAxisAlignment.start,
+        mainAxisAlignment:
+            message.isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
-          if (!isUserMessage) 
-            const CircleAvatar(
-              child: Icon(Icons.computer),
-            ),
-          const SizedBox(width: 8),
           Container(
+            decoration: BoxDecoration(
+              color: message.isMe
+                  ? Theme.of(context).primaryColor
+                  : Colors.grey[300],
+              borderRadius: BorderRadius.only(
+                topLeft: const Radius.circular(12),
+                topRight: const Radius.circular(12),
+                bottomLeft: message.isMe
+                    ? const Radius.circular(12)
+                    : const Radius.circular(0),
+                bottomRight: message.isMe
+                    ? const Radius.circular(0)
+                    : const Radius.circular(12),
+              ),
+            ),
             constraints: BoxConstraints(
               maxWidth: MediaQuery.of(context).size.width * 0.7,
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-            decoration: BoxDecoration(
-              color: isUserMessage 
-                  ? Colors.blue[300] 
-                  : Colors.grey[300],
-              borderRadius: BorderRadius.circular(20),
+            padding: const EdgeInsets.symmetric(
+              vertical: 10,
+              horizontal: 16,
+            ),
+            margin: const EdgeInsets.symmetric(
+              vertical: 4,
+              horizontal: 8,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  message.text,
+                  message.sender,
                   style: TextStyle(
-                    color: isUserMessage ? Colors.white : Colors.black87,
+                    fontWeight: FontWeight.bold,
+                    color: message.isMe ? Colors.white : Colors.black,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  _formatTime(message.timestamp),
+                  message.text,
+                  style: TextStyle(
+                    color: message.isMe ? Colors.white : Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  '${message.timestamp.hour}:${message.timestamp.minute.toString().padLeft(2, '0')}',
                   style: TextStyle(
                     fontSize: 10,
-                    color: isUserMessage 
-                        ? Colors.white.withOpacity(0.7) 
-                        : Colors.black54,
+                    color: message.isMe ? Colors.white70 : Colors.black54,
                   ),
                 ),
               ],
             ),
           ),
-          const SizedBox(width: 8),
-          if (isUserMessage) 
-            const CircleAvatar(
-              child: Icon(Icons.person),
-            ),
         ],
       ),
     );
-  }
-
-  String _formatTime(DateTime dateTime) {
-    return '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
   }
 }
