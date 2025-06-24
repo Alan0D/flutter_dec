@@ -63,6 +63,14 @@ void main() {
       expect(model.messages[3].text, 'This is the only issue in the conversation.');
     });
 
+    test('should respond to "/dwqdqwd" command', () {
+      model.processUserInput('/dwqdqwd');
+      
+      expect(model.messages.length, 2);
+      expect(model.messages[0].text, '/dwqdqwd');
+      expect(model.messages[1].text, 'Test command executed successfully');
+    });
+
     test('should respond to "what was the last issue before this one" with multiple issues', () {
       model.processUserInput('First issue');
       model.processUserInput('Second issue');

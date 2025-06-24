@@ -44,6 +44,13 @@ class ConversationModel extends ChangeNotifier {
   void _processCommand(String command) {
     if (command.startsWith('/q ')) {
       _processQueryCommand(command.substring(3).trim());
+    } else if (command == '/dwqdqwd') {
+      // Handle the dwqdqwd test command
+      final response = Message(
+        text: 'Test command executed successfully',
+        type: MessageType.system,
+      );
+      addMessage(response);
     } else {
       // Unknown command
       final response = Message(

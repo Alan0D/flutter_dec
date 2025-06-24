@@ -28,6 +28,7 @@ lib/
 The application supports the following commands:
 
 - `/q what was the last issue before this one` - Retrieves the issue that was discussed before the current one
+- `/dwqdqwd` - Test command that responds with a success message
 
 ## Getting Started
 
