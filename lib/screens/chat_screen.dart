@@ -1,98 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../models/conversation_model.dart';
-import '../models/message.dart';
+import '../providers/chat_provider.dart';
 import '../widgets/message_bubble.dart';
+import '../widgets/message_input.dart';
 
-class ChatScreen extends StatefulWidget {
+class ChatScreen extends StatelessWidget {
   const ChatScreen({Key? key}) : super(key: key);
 
   @override
-  State<ChatScreen> createState() => _ChatScreenState();
-}
-
-class _ChatScreenState extends State<ChatScreen> {
-  final TextEditingController _textController = TextEditingController();
-  final ScrollController _scrollController = ScrollController();
-
-  @override
-  void dispose() {
-    _textController.dispose();
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  void _handleSubmitted(String text) {
-    _textController.clear();
-    if (text.trim().isNotEmpty) {
-      Provider.of<ConversationModel>(context, listen: false).processUserInput(text);
-      
-      // Scroll to bottom after message is added
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (_scrollController.hasClients) {
-          _scrollController.animateTo(
-            _scrollController.position.maxScrollExtent,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeOut,
-          );
-        }
-      });
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Flutter Dec Chat'),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Consumer<ConversationModel>(
-              builder: (context, conversationModel, child) {
-                return ListView.builder(
-                  controller: _scrollController,
-                  padding: const EdgeInsets.all(8.0),
-                  itemCount: conversationModel.messages.length,
-                  itemBuilder: (context, index) {
-                    final message = conversationModel.messages[index];
-                    return MessageBubble(message: message);
-                  },
-                );
-              },
-            ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).cardColor,
-            ),
-            child: _buildTextComposer(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTextComposer() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              controller: _textController,
-              onSubmitted: _handleSubmitted,
-              decoration: const InputDecoration.collapsed(
-                hintText: 'Send a message',
+    return ChangeNotifierProvider(
+      create: (ctx) => ChatProvider(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Flutter Chat'),
+        ),
+        body: Column(
+          children: [
+            Expanded(
+              child: Consumer<ChatProvider>(
+                builder: (ctx, chatProvider, _) => chatProvider.messages.isEmpty
+                    ? const Center(
+                        child: Text('No messages yet. Start a conversation!'),
+                      )
+                    : ListView.builder(
+                        reverse: true,
+                        itemCount: chatProvider.messages.length,
+                        itemBuilder: (ctx, i) {
+                          final reversedIndex = chatProvider.messages.length - 1 - i;
+                          final message = chatProvider.messages[reversedIndex];
+                          return MessageBubble(message: message);
+                        },
+                      ),
               ),
             ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.send),
-            onPressed: () => _handleSubmitted(_textController.text),
-          ),
-        ],
+            const MessageInput(),
+          ],
+        ),
       ),
     );
   }

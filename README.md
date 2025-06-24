@@ -1,41 +1,27 @@
-# Flutter Dec
+# Flutter Chat Application
 
-A Flutter chat application with command processing capabilities.
+A simple chat application built with Flutter.
 
 ## Features
 
-- Chat interface for sending and receiving messages
-- Command processing system using the "/" prefix
-- Issue tracking functionality
-- Support for the "/q what was the last issue before this one" command to retrieve previous issues
-
-## Project Structure
-
-```
-lib/
-  ├── main.dart              # Application entry point
-  ├── models/
-  │   ├── conversation_model.dart  # Handles message history and command processing
-  │   └── message.dart       # Message data model
-  ├── screens/
-  │   └── chat_screen.dart   # Main chat interface
-  └── widgets/
-      └── message_bubble.dart  # UI component for displaying messages
-```
-
-## Commands
-
-The application supports the following commands:
-
-- `/q what was the last issue before this one` - Retrieves the issue that was discussed before the current one
+- Real-time chat interface
+- Message bubbles with sender information and timestamps
+- Automatic responses to messages
+- Clean and intuitive UI
 
 ## Getting Started
 
-1. Ensure you have Flutter installed on your machine
-2. Clone this repository
-3. Run `flutter pub get` to install dependencies
-4. Run `flutter run` to start the application
+1. Clone the repository
+2. Run `flutter pub get` to install dependencies
+3. Run `flutter run` to start the application
 
 ## Testing
 
 Run `flutter test` to execute the unit tests.
+
+## Structure
+
+- `lib/models`: Contains the data models for the application
+- `lib/providers`: Contains the state management logic
+- `lib/screens`: Contains the main screens of the application
+- `lib/widgets`: Contains reusable UI components
